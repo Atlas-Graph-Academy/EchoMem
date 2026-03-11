@@ -1,18 +1,22 @@
-# Memory Graph
+﻿# Memory Graph
 
-Visualize and navigate memory clusters as interactive knowledge graphs. Renders Luhmann-encoded memories into explorable node-link diagrams with cluster highlighting, narrative overlays, and real-time updates.
+Use EchoMem graph and narrative APIs to explore memory structure and story context.
 
-## Usage
+## Commands
 
 ```bash
-memory-graph render <graph-id>     # Generate graph visualization
-memory-graph explore <graph-id>    # Interactive exploration mode
-memory-graph export <graph-id>     # Export as SVG/PNG/JSON
+memory-graph render --page 1 --page-size 220 --include-details
+memory-graph narrative-context --memory-id "<memory-uuid>"
+memory-graph narrative-text --input ./examples/narrative-memories.json
 ```
 
-## Features
+## Required environment
 
-- Cluster-aware layout with automatic grouping
-- Narrative generation per cluster
-- Cross-user connection discovery
-- WebView-ready output for embedding in apps
+- `ECHOMEM_BASE_URL`
+- `ECHOMEM_API_KEY`
+
+## Notes
+
+- `render` calls `/api/extension/memories/graph-data`
+- `narrative-context` calls `/api/extension/memories/narrative-context`
+- `narrative-text` calls `/api/extension/memories/narrative-text`

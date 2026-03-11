@@ -1,0 +1,26 @@
+{
+  "name": "openclaw-skills-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Executable runtime for openclaw-skills EchoMem integrations.",
+  "type": "module",
+  "bin": {
+    "echo-memory": "./scripts/echo-memory.js",
+    "echo-chat": "./scripts/chats.js",
+    "memory-graph": "./scripts/memory-graph.js",
+    "connect": "./scripts/connect.js",
+    "memory-network": "./scripts/memory-network.js",
+    "memory-map": "./scripts/memory-map.js",
+    "echo-identity": "./scripts/echo-identity.js",
+    "memory-signal": "./scripts/memory-signal.js",
+    "echo-match": "./scripts/echo-match.js",
+    "echo-community": "./scripts/echo-community.js",
+    "echo-page": "./scripts/echo-page.js"
+  },
+  "scripts": {
+    "check": "node --check scripts/echo-memory.js && node --check scripts/chats.js && node --check scripts/memory-graph.js && node --check scripts/connect.js && node --check scripts/memory-network.js && node --check scripts/memory-map.js && node --check scripts/echo-identity.js && node --check scripts/memory-signal.js && node --check scripts/echo-match.js && node --check scripts/echo-community.js && node --check scripts/echo-page.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

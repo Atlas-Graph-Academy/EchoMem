@@ -1,18 +1,18 @@
 # Echo Match
 
-Find people with resonant memories — emotion-aware cross-user matching. Surfaces the humans who truly understand your experiences, not through algorithms or interests, but through shared emotional depth.
+Find resonant people using existing social memory endpoints, with sanitized outputs and no internal pipeline exposure.
 
 ## Usage
 
 ```bash
-echo-match find <user-id>          # Find resonant matches for a user
-echo-match compare <id-a> <id-b>   # Deep comparison between two users
-echo-match explain <match-id>      # Explain why two people matched
+echo-match find --user-id <uuid> --query <text> [--limit <n>]
+echo-match compare --id-a <uuid> --id-b <uuid>
+echo-match explain --match-id <memory-id>
 ```
 
-## Features
+## First-pass behavior
 
-- Emotion-aware vector similarity (beyond keyword matching)
-- Evidence-backed match explanations with cited memories
-- Privacy-first: only public/opted-in memories are searchable
-- Configurable depth thresholds (surface vs deep matching)
+- `find` uses friends-prior memory search to return candidate resonance memories.
+- `compare` computes overlap summaries (emotion/category) from both users' feeds.
+- `explain` resolves a match candidate via similar-memory evidence for a memory id.
+- Responses are DTO-sanitized for OSS safety.

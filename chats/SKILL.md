@@ -1,19 +1,22 @@
-# Echo Chat
+﻿# Echo Chat
 
-Memory-powered conversational AI that knows you. Chat with an agent grounded in your personal memories — responses are contextual, emotionally aware, and cite real experiences. The core conversation engine behind Echo.
+Memory-powered chat helpers backed by EchoMem retrieval/context endpoints.
 
-## Usage
+## Commands
 
 ```bash
-echo-chat start <user-id>          # Start memory-grounded conversation
-echo-chat peer <id-a> <id-b>       # Facilitate peer-to-peer memory chat
-echo-chat export <thread-id>       # Export conversation with memory refs
+echo-chat search --query "what did I say about roadmap"
+echo-chat context --context-id "<context-uuid>"
+echo-chat time-range --start "2026-02-01T00:00:00Z" --end "2026-03-01T00:00:00Z"
 ```
 
-## Features
+## Required environment
 
-- Memory-grounded responses with evidence citations
-- Emotion-aware tone matching
-- Peer messaging with shared memory context
-- Voice and text modes
-- Cross-platform memory integration (ChatGPT, Gemini, etc.)
+- `ECHOMEM_BASE_URL`
+- `ECHOMEM_API_KEY`
+
+## Notes
+
+- `search` uses semantic retrieval (`/api/extension/memories/search`)
+- `context` fetches message history (`/api/extension/contexts/{id}/messages`)
+- `time-range` returns chronological memory slices

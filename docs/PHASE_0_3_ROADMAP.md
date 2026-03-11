@@ -45,7 +45,7 @@ This repo should not own:
 | Skill | Exact endpoints in current stack | Tables / RPC used | Feasibility now | Gap to close |
 | --- | --- | --- | --- | --- |
 | `echo-memory` | EchoMem: `GET /api/extension/memories`, `POST /api/extension/memories/ingest`, `POST /api/extension/memories/search`, `POST /api/extension/memories/time-range`, `PATCH /api/extension/memories/[id]`, `DELETE /api/extension/memories/[id]`; MCP: `GET|POST /api/extension/mcp` | `memory_new`, `source_of_truth`, `context`, `api_keys`; RPC: `dev_memory_description_similar_embedding` | High | Align MCP package server vs remote MCP tool parity |
-| `memory-graph` | EchoMem: `GET /api/extension/memories/graph-data`, `GET /api/extension/memories/narrative-context`, `POST /api/extension/memories/narrative-text` | `memory_new`, `memory_neighbors`, `memory_clusters`, `source_of_truth`; RPC in narrative context search path | Medium-high | Need stable graph response contract for OSS client |
+| `memory-graph` | Profile A (EchoMem Extension): `GET /api/extension/memories/graph-data`, `GET /api/extension/memories/narrative-context`, `POST /api/extension/memories/narrative-text`; Profile B (Iditor User Graph): `GET /api/user-memory/graph-data`, `GET /api/user-memory/narrative-context`, `POST /api/user-memory/narrative-context` | `memory_new`, `memory_neighbors`, `memory_clusters`, `source_of_truth`, `narrative_chains`; optional `public_graph_index` for public preview mode | Medium-high | Need shared graph DTO + explicit backend profile/auth mode support (`api_key` vs `supabase_jwt`) |
 | `memory-map` | Mercury: `GET /api/memory-map`, `GET /api/memory-map-search`, `GET /api/memory-map-convergence`, `POST /api/memory-map-convergence/compute` | `memory_map_projection`, `memory_map_base`, `memory_map_convergence_runs`; RPC: `memory_map_hybrid_candidates`, `get_convergence_memories`, `get_convergence_run_memories`, `get_convergence_run_paths`; `social_canvas` | Medium | Mark as experimental until convergence schema + API contract are versioned |
 | `memory-network` | MemoryFeed: `POST /api/search`, `POST /api/friends-prior-search`; Mercury: `GET /api/friends`; MCP tool path via `search_others_memories` | `memory_new`, `social_canvas`, `pair.paired`, `report.user_visibility_blocks` | Medium | Missing durable network-edge materialization API/table |
 | `connect` | MemoryFeed: `POST /api/search`, `POST /api/friends-prior-search`, `GET /api/similar` | `memory_new`, `social_canvas`, `pair.paired`, `report.user_visibility_blocks`; RPCs behind search/feed logic | Medium-high | Need explainability schema for "why connected" |
@@ -99,6 +99,9 @@ Exit criteria:
 ## Phase 2: EchoMem Cloud + Pipeline Provider (3-5 weeks)
 
 - Ship `echomem_cloud` adapter for `/api/extension/memories/*`, `/api/extension/sources*`, `/api/extension/mcp`.
+- For `memory-graph`, add backend profiles:
+  - `extension` profile (`/api/extension/memories/*`)
+  - `iditor_user` profile (`/api/user-memory/*`)
 - Add provenance checks: `source_of_truth_ids` and `context` linkage in responses.
 - Document Mercury bridge from markdown/text staging to `memory_new`.
 - Unify MCP tool capabilities between package MCP server and remote MCP endpoint.
@@ -106,6 +109,7 @@ Exit criteria:
 Exit criteria:
 
 - Cloud mode works with API key auth and deterministic fallback to local mode.
+- Memory-graph backend switch works without changing skill logic.
 - Ingestion lineage is traceable from source to memory row.
 
 ## Phase 3: Social Discovery Beta (4-6 weeks)
