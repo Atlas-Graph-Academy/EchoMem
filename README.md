@@ -16,6 +16,13 @@ This repo now includes executable skill runtime scripts for EchoMem cloud integr
 
 ### Environment
 
+Runtime auto-loads `.env` and `.env.local` from either current working directory or this repo root.  
+Recommended setup:
+
+```bash
+cp .env.example .env.local
+```
+
 ```bash
 export ECHOMEM_BASE_URL="http://localhost:3000"
 export ECHOMEM_API_KEY="ec_your_key"
