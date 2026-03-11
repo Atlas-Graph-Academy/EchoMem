@@ -1,4 +1,6 @@
-docs/REFERENCE_TABLE_SCHEMA.md
+# Docs
+docs/*.md
+docs/**/*.md
 
 # Logs
 logs
