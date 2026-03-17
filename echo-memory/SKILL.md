@@ -1,11 +1,13 @@
 ---
 name: echo-memory
-description: "Guide users through installing, configuring, and troubleshooting the EchoMemory Cloud OpenClaw Plugin. Use for plugin setup, API key onboarding, local mode vs cloud mode switching, local UI startup, gateway restart checks, localhost viewer issues, and /echo-memory command guidance."
+description: "Guide users through installing, configuring, using, and troubleshooting the EchoMemory Cloud OpenClaw Plugin. Use for plugin setup, API key onboarding, local mode vs cloud mode switching, local UI startup, gateway restart checks, localhost viewer issues, normal /echo-memory command usage, and natural-language routing to current EchoMemory plugin functions."
 ---
 
 # EchoMemory Plugin
 
 Use this skill when the user is setting up or debugging the EchoMemory OpenClaw plugin.
+
+Also use it for normal EchoMemory usage requests after setup, especially when the user asks in plain language instead of naming the exact command.
 
 Prefer the plugin's current runtime behavior over old repo habits:
 
@@ -69,6 +71,59 @@ If the plugin is loaded but the user still cannot open the viewer:
 3. confirm `localUiAutoInstall` was not disabled before the first run
 4. use the fallback script at [`scripts/start-local-ui.mjs`](./scripts/start-local-ui.mjs)
 
+## Normal usage routing
+
+Map normal-language requests to the current plugin surface instead of replying from generic memory or setup knowledge.
+
+Use `echo_memory_onboard` or `/echo-memory onboard` when the user asks about:
+
+- install or link steps
+- signup, OTP, referral code, API key creation
+- configuration, troubleshooting, or how the plugin works
+- the command list itself
+
+Use `echo_memory_local_ui` or `/echo-memory view` when the user asks to:
+
+- open, browse, launch, or get the URL for local memories
+- view markdown memories on localhost
+- open the workspace viewer or local UI
+
+Use `echo_memory_search` or `/echo-memory search <query>` when the user asks:
+
+- "what do you remember about ..."
+- "search my memories for ..."
+- "find my notes about ..."
+- for prior facts, plans, dates, preferences, or decisions already stored in EchoMemory cloud
+
+Use `echo_memory_status` or `/echo-memory status` when the user asks about:
+
+- whether EchoMemory is working
+- sync health, last sync, import progress, or recent imports
+
+Use `echo_memory_sync` or `/echo-memory sync` when the user asks to:
+
+- sync, refresh, import, upload, or push local markdown memories to the cloud
+
+Use `/echo-memory whoami` when the user wants to verify:
+
+- the current EchoMemory identity
+- the token type
+- the active scopes on the current API key
+
+Use `echo_memory_graph_link` or graph commands when the user asks for:
+
+- the memory graph
+- the cloud graph or graph view
+- an iditor.com memory page
+- the public memories page
+
+Choose the graph target carefully:
+
+- private graph: `echo_memory_graph_link` with `visibility: private` or `/echo-memory graph`
+- public memories page: `echo_memory_graph_link` with `visibility: public` or `/echo-memory graph public`
+
+Use `/echo-memory help` when the user explicitly asks for the command list.
+
 ## Working flow
 
 1. Install or link the plugin.
@@ -84,6 +139,8 @@ If the plugin is loaded but the user still cannot open the viewer:
 /echo-memory sync
 /echo-memory search <known topic>
 ```
+
+If the user is already set up and wants a quick usage reference, read [`references/normal-usage.md`](./references/normal-usage.md).
 
 ## Configuration examples
 
@@ -130,6 +187,7 @@ Local mode:
 
 ## References
 
+- [`references/normal-usage.md`](./references/normal-usage.md): current commands, plain-language trigger mapping, and when to use local UI versus graph
 - [`references/mode-switching.md`](./references/mode-switching.md): exact local/cloud toggles, config precedence, and restart rules
 - [`references/troubleshooting.md`](./references/troubleshooting.md): failure patterns for plugin discovery, local UI startup, auth, and sync
 - [`scripts/start-local-ui.mjs`](./scripts/start-local-ui.mjs): manual fallback to launch the local UI when the gateway cannot start it
