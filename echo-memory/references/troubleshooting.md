@@ -10,6 +10,7 @@ Check these in order:
 2. `tools.profile` is `"full"` in `~/.openclaw/openclaw.json`
 3. the plugin config entry key is exactly `echo-memory-cloud-openclaw-plugin`
 4. `openclaw gateway restart` was run after the last change
+5. there are no stale plugin entries still present under `plugins.entries`
 
 ## `plugin not found: echo-memory-cloud-openclaw-plugin`
 
@@ -18,6 +19,8 @@ Likely causes:
 - the plugin was never installed
 - the install path was not quoted on Windows
 - the gateway was not restarted after install
+- the package was installed globally, but not where OpenClaw discovers plugins
+- the OpenClaw version is older than the plugin discovery target
 
 Preferred fix:
 
@@ -27,6 +30,14 @@ openclaw gateway restart
 ```
 
 If discovery is still blocked, start the local UI manually with [`../scripts/start-local-ui.mjs`](../scripts/start-local-ui.mjs).
+
+Also check for stale warnings like:
+
+```text
+plugins.entries.echomemory-cloud: plugin not found
+```
+
+That means an old config entry is still present and should be removed.
 
 ## Local UI does not open on gateway restart
 
@@ -40,6 +51,7 @@ Checks:
 1. find `[echo-memory] Local workspace viewer:` in gateway logs
 2. verify port `17823` is listening
 3. confirm `localUiAutoInstall` is not disabled before the first run
+4. confirm the gateway is fully back up and not still draining from restart
 
 Manual fallback:
 
@@ -54,12 +66,25 @@ Likely causes:
 1. `localOnlyMode` is still `true`
 2. the API key is blank
 3. `ECHOMEM_LOCAL_ONLY_MODE=true` was saved in `~/.openclaw/.env`
+4. the OpenClaw plugin config is overriding what the local UI sidebar saved
+5. a manually started local UI server was launched without a usable API client
 
 Fix:
 
 1. set `localOnlyMode` back to `false`
 2. restore a valid `ec_...` API key
 3. restart the gateway
+
+Important precedence rule:
+
+- plugin config beats `.env`
+- if the sidebar writes the API key to `.env` but `openclaw.json` still says `localOnlyMode: true`, the UI can remain stuck in local mode
+
+Manual server pitfall:
+
+- the local UI can still show local mode if the fallback server was started without both:
+  - a config with `localOnlyMode: false`
+  - an initialized API client
 
 ## `/echo-memory` commands fail with authorization errors
 
@@ -71,6 +96,8 @@ Check:
 - channel-specific user allowlists
 - then restart the gateway
 
+If the failure happens immediately after config edits, also consider that the gateway may still be restarting.
+
 ## `/echo-memory sync` or search returns nothing
 
 Check:
@@ -79,3 +106,21 @@ Check:
 2. `memoryDir` points to the markdown directory you expect
 3. the local markdown files actually exist
 4. the user is testing with a known imported topic rather than a narrow literal phrase
+
+## Version mismatch fallback
+
+If the plugin package is installed but OpenClaw still does not discover it, check the OpenClaw version.
+
+Observed failure pattern:
+
+- plugin package present
+- gateway restart succeeds
+- local UI is not started by the plugin
+- logs still imply plugin discovery failure
+
+In that case:
+
+1. update OpenClaw if possible
+2. otherwise use [`../scripts/start-local-ui.mjs`](../scripts/start-local-ui.mjs) as a temporary fallback for the localhost UI
+
+This fallback can get the UI working even when full plugin auto-discovery is blocked.

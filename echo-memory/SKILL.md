@@ -5,7 +5,7 @@ description: "Guide users through installing, configuring, using, and troublesho
 
 # EchoMemory Plugin
 
-Use this skill when the user is setting up or debugging the EchoMemory OpenClaw plugin.
+Use this skill when the user is setting up, using, or debugging the EchoMemory OpenClaw plugin.
 
 Also use it for normal EchoMemory usage requests after setup, especially when the user asks in plain language instead of naming the exact command.
 
@@ -15,6 +15,147 @@ Prefer the plugin's current runtime behavior over old repo habits:
 - `localUiAutoOpenOnGatewayStart` defaults to `true`
 - browser auto-open is skipped automatically on headless, SSH, or CI sessions
 - removing the API key from the local UI forces local-only mode for future loads
+
+## Initial setup from zero
+
+Use this flow when the user has not installed the plugin yet.
+
+Official references:
+
+- OpenClaw Marketplace: `https://openclawdir.com/plugins/echomemory-ArQh3g`
+- NPM package: `https://www.npmjs.com/package/@echomem/echo-memory-cloud-openclaw-plugin`
+- GitHub repo: `https://github.com/Atlas-Graph-Academy/EchoMemory-Cloud-OpenClaw-Plugin`
+
+Recommended setup order:
+
+1. Confirm the user already has OpenClaw installed and can run `openclaw`.
+2. Install the plugin from a published source or local repo.
+3. Create an EchoMemory account and API key.
+4. Add the plugin config and set `tools.profile` to `"full"`.
+5. Restart the gateway.
+6. Verify the local UI and command surface.
+
+### Install options
+
+Published package install inside the OpenClaw home directory:
+
+```powershell
+cd $HOME\.openclaw
+npm install @echomem/echo-memory-cloud-openclaw-plugin
+```
+
+Local repo install:
+
+```powershell
+openclaw plugins install "C:\Users\Your Name\Documents\GitHub\EchoMemory-Cloud-OpenClaw-Plugin"
+```
+
+Linked local repo install for active development:
+
+```powershell
+openclaw plugins install --link "C:\Users\Your Name\Documents\GitHub\EchoMemory-Cloud-OpenClaw-Plugin"
+```
+
+Important Windows pitfall:
+
+- quote the plugin path if it contains spaces, or `openclaw plugins install` may parse the path incorrectly
+
+### Account and API key
+
+For first-time users:
+
+1. Sign up at `https://iditor.com/signup/openclaw`.
+2. Complete the 6-digit OTP email flow.
+3. If prompted on first login, use referral code:
+
+```text
+openclawyay
+```
+
+4. Open `https://www.iditor.com/api`.
+5. Create an API key that starts with `ec_`.
+6. Recommended scopes: `ingest:write` and `memory:read`.
+
+### Required host setup
+
+In `~/.openclaw/openclaw.json`, set:
+
+```json5
+{
+  "tools": {
+    "profile": "full"
+  }
+}
+```
+
+The default `coding` profile is too restrictive for normal EchoMemory plugin usage.
+
+### Valid first config
+
+Use this as the baseline cloud-mode setup for a new install:
+
+```json5
+{
+  "tools": {
+    "profile": "full"
+  },
+  "plugins": {
+    "entries": {
+      "echo-memory-cloud-openclaw-plugin": {
+        "enabled": true,
+        "config": {
+          "apiKey": "ec_your_key_here",
+          "memoryDir": "C:\\Users\\your-user\\.openclaw\\workspace\\memory",
+          "autoSync": false,
+          "localOnlyMode": false,
+          "localUiAutoOpenOnGatewayStart": true,
+          "localUiAutoInstall": true,
+          "syncIntervalMinutes": 15,
+          "batchSize": 10,
+          "requestTimeoutMs": 300000
+        }
+      }
+    }
+  }
+}
+```
+
+Environment file alternative in `~/.openclaw/.env`:
+
+```env
+ECHOMEM_API_KEY=ec_your_key_here
+ECHOMEM_MEMORY_DIR=C:\Users\your-user\.openclaw\workspace\memory
+ECHOMEM_AUTO_SYNC=false
+ECHOMEM_LOCAL_ONLY_MODE=false
+ECHOMEM_LOCAL_UI_AUTO_OPEN_ON_GATEWAY_START=true
+ECHOMEM_LOCAL_UI_AUTO_INSTALL=true
+ECHOMEM_SYNC_INTERVAL_MINUTES=15
+ECHOMEM_BATCH_SIZE=10
+ECHOMEM_REQUEST_TIMEOUT_MS=300000
+```
+
+### First restart and verification
+
+After install and config changes:
+
+```powershell
+openclaw gateway restart
+```
+
+Successful startup usually includes:
+
+- plugin discovery succeeded
+- local UI dependency install/build messages on first run if assets are missing
+- `[echo-memory] Local workspace viewer: http://127.0.0.1:17823`
+
+Recommended first smoke test order:
+
+1. `/echo-memory whoami`
+2. `/echo-memory status`
+3. `/echo-memory sync`
+4. `/echo-memory search <known memory topic>`
+
+If the user is not ready for cloud setup yet, local-only mode is still valid. Read [`references/mode-switching.md`](./references/mode-switching.md).
 
 ## First checks
 
@@ -78,6 +219,8 @@ Map normal-language requests to the current plugin surface instead of replying f
 Use `echo_memory_onboard` or `/echo-memory onboard` when the user asks about:
 
 - install or link steps
+- marketplace, npm, or GitHub sources
+- first-time setup from zero
 - signup, OTP, referral code, API key creation
 - configuration, troubleshooting, or how the plugin works
 - the command list itself
@@ -187,6 +330,7 @@ Local mode:
 
 ## References
 
+- [`references/initial-setup.md`](./references/initial-setup.md): zero-to-working install path, account creation, config, and first verification checks
 - [`references/normal-usage.md`](./references/normal-usage.md): current commands, plain-language trigger mapping, and when to use local UI versus graph
 - [`references/mode-switching.md`](./references/mode-switching.md): exact local/cloud toggles, config precedence, and restart rules
 - [`references/troubleshooting.md`](./references/troubleshooting.md): failure patterns for plugin discovery, local UI startup, auth, and sync
