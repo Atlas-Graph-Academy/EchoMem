@@ -92,6 +92,28 @@ Important Windows pitfall:
 
 - quote the plugin path if it contains spaces, or `openclaw plugins install` may parse the path incorrectly
 
+### Cleanup and reinstall
+
+When the user wants to remove an old install cleanly, use the exact OpenClaw uninstall command instead of describing manual cleanup first:
+
+```powershell
+openclaw plugins uninstall echo-memory-cloud-openclaw-plugin
+```
+
+Helpful variants:
+
+- `openclaw plugins uninstall echo-memory-cloud-openclaw-plugin --dry-run`
+- `openclaw plugins uninstall echo-memory-cloud-openclaw-plugin --keep-files`
+
+`uninstall` removes the plugin entry, tracked install record, allowlist entry, and linked load path when applicable. By default it also removes the plugin install directory under OpenClaw's active extensions root.
+
+After uninstall:
+
+1. remove stale config ids like `plugins.entries.echomemory-cloud` if present
+2. run `openclaw gateway restart`
+3. reinstall from npm or the intended local path
+4. run `openclaw gateway restart` again
+
 ### Account and API key
 
 For first-time users:
@@ -267,6 +289,7 @@ Use `echo_memory_onboard` or `/echo-memory onboard` when the user asks about:
 - install or link steps
 - marketplace, npm, or GitHub sources
 - first-time setup from zero
+- uninstall, cleanup, or clean reinstall steps
 - signup, OTP, referral code, API key creation
 - configuration, troubleshooting, or how the plugin works
 - the command list itself

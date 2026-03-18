@@ -39,6 +39,31 @@ plugins.entries.echomemory-cloud: plugin not found
 
 That means an old config entry is still present and should be removed.
 
+## Clean reinstall when behavior is inconsistent
+
+Use this when the plugin is half-working, stale, or you suspect the installed build does not match the published or local source you expect.
+
+Suggested cleanup flow:
+
+1. `openclaw plugins uninstall echo-memory-cloud-openclaw-plugin --dry-run`
+2. `openclaw plugins uninstall echo-memory-cloud-openclaw-plugin`
+3. remove stale plugin config entries if any old ids remain
+4. restart the gateway
+5. reinstall from npm or the intended local path
+6. restart the gateway again
+
+If the user wants to keep local plugin files on disk while removing the active OpenClaw install record, use:
+
+```powershell
+openclaw plugins uninstall echo-memory-cloud-openclaw-plugin --keep-files
+```
+
+If the issue involves local UI behavior, prefer a clean reinstall before debugging deeper:
+
+- stale frontend assets
+- copied install versus linked install confusion
+- old package contents still present under OpenClaw's extension path
+
 ## Local UI does not open on gateway restart
 
 Expected behavior:

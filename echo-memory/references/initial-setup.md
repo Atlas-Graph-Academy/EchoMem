@@ -77,6 +77,100 @@ Important install rule:
 
 Do not assume "installed somewhere on the machine" means OpenClaw can load it.
 
+## Clean reinstall and cleanup
+
+Use this when the user has an older published build installed and wants to replace it cleanly.
+
+Recommended sequence:
+
+1. Inspect the current install state.
+2. Uninstall the plugin by its exact id.
+3. Remove stale plugin config entries if any old ids remain.
+4. Restart the gateway once to clear the old runtime.
+5. Install the updated plugin.
+6. Restart the gateway again and verify startup.
+
+Useful cleanup checks:
+
+```powershell
+openclaw plugins list
+openclaw plugins info echo-memory-cloud-openclaw-plugin
+```
+
+Exact uninstall command:
+
+```powershell
+openclaw plugins uninstall echo-memory-cloud-openclaw-plugin
+```
+
+Safe preview before uninstall:
+
+```powershell
+openclaw plugins uninstall echo-memory-cloud-openclaw-plugin --dry-run
+```
+
+If the user wants OpenClaw to forget the plugin but keep the files on disk:
+
+```powershell
+openclaw plugins uninstall echo-memory-cloud-openclaw-plugin --keep-files
+```
+
+If OpenClaw config still contains stale plugin IDs, remove them and keep only:
+
+```text
+plugins.entries.echo-memory-cloud-openclaw-plugin
+```
+
+Examples of stale keys to remove:
+
+- `plugins.entries.echomemory-cloud`
+- any older typo or alias for the plugin id
+
+What uninstall removes:
+
+- the `plugins.entries` record for that plugin
+- the `plugins.installs` record
+- plugin allowlist entries
+- linked `plugins.load.paths` entries when applicable
+
+Default uninstall behavior also removes the plugin install directory under the active OpenClaw extensions root. Use `--keep-files` only when you intentionally want to preserve the package files for local inspection or manual relinking.
+
+After uninstall and config cleanup:
+
+```powershell
+openclaw gateway restart
+```
+
+Then reinstall using one of the normal install paths:
+
+```powershell
+cd $HOME\.openclaw
+npm install @echomem/echo-memory-cloud-openclaw-plugin
+```
+
+or
+
+```powershell
+openclaw plugins install "C:\Users\Your Name\Documents\GitHub\EchoMemory-Cloud-OpenClaw-Plugin"
+```
+
+or for active development:
+
+```powershell
+openclaw plugins install --link "C:\Users\Your Name\Documents\GitHub\EchoMemory-Cloud-OpenClaw-Plugin"
+```
+
+Then restart again:
+
+```powershell
+openclaw gateway restart
+```
+
+Important practical rule:
+
+- do not leave both an old copied install and a new linked install around if OpenClaw could discover either one
+- clean reinstall is safer when debugging local UI issues, stale builds, or version mismatch confusion
+
 ## Account setup
 
 1. Sign up at `https://iditor.com/signup/openclaw`.
