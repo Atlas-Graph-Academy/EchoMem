@@ -13,8 +13,11 @@ Prefer the plugin's current runtime behavior over old repo habits:
 
 - the plugin starts the local UI during `openclaw gateway` startup
 - `localUiAutoOpenOnGatewayStart` defaults to `true`
+- if a local UI page is already open, gateway restart should let that page reconnect and refresh instead of spawning a redundant new browser window
 - browser auto-open is skipped automatically on headless, SSH, or CI sessions
 - removing the API key from the local UI forces local-only mode for future loads
+- local sync state is now kept in a stable OpenClaw-home state path so reinstalling or upgrading the plugin should not reset prior synced-file status
+- sensitive files in the local UI are warning-labeled but still readable locally; the warning is for caution, not a localhost read blocker
 
 ## OpenClaw memory layout
 
@@ -122,6 +125,8 @@ After uninstall:
 2. run `openclaw gateway restart`
 3. reinstall from npm or the intended local path
 4. run `openclaw gateway restart` again
+
+Do not tell users that reinstalling the plugin should reset synced-file history. Current behavior is supposed to preserve sync state across versions under the OpenClaw home state directory.
 
 ### Account and API key
 
@@ -288,6 +293,7 @@ Explain the surface clearly when needed:
 - the local UI is a localhost workspace browser over OpenClaw markdown files
 - it can show more workspace files than the cloud sync importer uploads
 - cloud mode status in the UI depends on both config and a working API client, not just the presence of a saved key string
+- local UI warnings for sensitive files do not mean the file is unreadable locally; they are caution labels while the underlying localhost viewer still reads the markdown content from disk
 
 ## Normal usage routing
 
