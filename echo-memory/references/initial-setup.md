@@ -47,6 +47,11 @@ So "visible in the local UI" is not the same as "already included in cloud sync.
 
 ## Install paths
 
+OpenClaw version note:
+
+- on `2026.3.22+`, bare `openclaw plugins install <name>` may prefer ClawHub before npm
+- for EchoMemory, use an exact local path, `--link`, or the exact scoped npm package
+
 Published package install:
 
 ```powershell
@@ -74,6 +79,7 @@ Important install rule:
   - `npm install` inside `$HOME/.openclaw`
   - `openclaw plugins install ...`
   - `openclaw plugins install --link ...`
+- on newer OpenClaw versions, the active tracked install may live under `~/.openclaw/extensions` even when the original source was npm or a local path
 
 Do not assume "installed somewhere on the machine" means OpenClaw can load it.
 
@@ -295,16 +301,19 @@ These came from an actual setup/debug session and are worth checking early:
 3. Global install is not enough.
    If OpenClaw says the plugin is missing, install it into `~/.openclaw` or via `openclaw plugins install`.
 
-4. Gateway restart timing can look like failure.
+4. Do not assume `node_modules` is the only install location.
+   Newer OpenClaw versions can track the active plugin under `~/.openclaw/extensions`.
+
+5. Gateway restart timing can look like failure.
    If tasks are rejected while the gateway is draining, wait for restart completion before debugging further.
 
-5. Local mode can persist unexpectedly.
+6. Local mode can persist unexpectedly.
    If the UI sidebar saved an API key but the app still says local mode, verify both:
    - `localOnlyMode` is `false`
    - the API key is available from the winning config source
 
-6. Manual local UI startup is a fallback, not the preferred steady state.
+7. Manual local UI startup is a fallback, not the preferred steady state.
    It is useful when discovery fails, especially around version mismatch, but normal operation should come from plugin startup on `openclaw gateway restart`.
 
-7. Local UI and cloud sync do not cover the exact same file set.
+8. Local UI and cloud sync do not cover the exact same file set.
    If a note appears in the local viewer but not in cloud search, check whether it lives inside the configured sync directory and whether it is a top-level markdown file for the current importer.

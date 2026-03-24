@@ -57,6 +57,12 @@ Official references:
 - NPM package: `https://www.npmjs.com/package/@echomem/echo-memory-cloud-openclaw-plugin`
 - GitHub repo: `https://github.com/Atlas-Graph-Academy/EchoMemory-Cloud-OpenClaw-Plugin`
 
+OpenClaw version note:
+
+- on `2026.3.22+`, native `openclaw skills install` exists for skills, but plugin source precedence also changed
+- this skill should guide plugin installs through exact local paths, `--link`, or the exact scoped npm package
+- do not recommend bare `openclaw plugins install <name>` for EchoMemory because newer OpenClaw versions may resolve bare names through ClawHub first
+
 Recommended setup order:
 
 1. Confirm the user already has OpenClaw installed and can run `openclaw`.
@@ -91,6 +97,7 @@ openclaw plugins install --link "C:\Users\Your Name\Documents\GitHub\EchoMemory-
 Important Windows pitfall:
 
 - quote the plugin path if it contains spaces, or `openclaw plugins install` may parse the path incorrectly
+- on `2026.3.22+`, avoid bare plugin names and use the exact scoped package or exact local path instead
 
 ### Cleanup and reinstall
 
@@ -106,6 +113,8 @@ Helpful variants:
 - `openclaw plugins uninstall echo-memory-cloud-openclaw-plugin --keep-files`
 
 `uninstall` removes the plugin entry, tracked install record, allowlist entry, and linked load path when applicable. By default it also removes the plugin install directory under OpenClaw's active extensions root.
+
+Do not assume the active plugin always lives under `~/.openclaw/node_modules`. On newer OpenClaw versions the active install may be tracked under `~/.openclaw/extensions`.
 
 After uninstall:
 

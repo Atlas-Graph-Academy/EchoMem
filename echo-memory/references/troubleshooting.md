@@ -21,6 +21,7 @@ Likely causes:
 - the gateway was not restarted after install
 - the package was installed globally, but not where OpenClaw discovers plugins
 - the OpenClaw version is older than the plugin discovery target
+- the active install is under `~/.openclaw/extensions`, but someone is only checking `node_modules`
 
 Preferred fix:
 
