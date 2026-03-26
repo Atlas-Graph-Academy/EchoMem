@@ -158,6 +158,23 @@ In `~/.openclaw/openclaw.json`, set:
 
 The default `coding` profile is too restrictive for normal EchoMemory plugin usage.
 
+If the user wants EchoMemory to fully replace OpenClaw's built-in memory recall, also guide them to disable the core memory tools in the same config:
+
+```json5
+{
+  "tools": {
+    "profile": "full",
+    "deny": ["memory_search", "memory_get"]
+  }
+}
+```
+
+Important distinction:
+
+- the local UI checkbox `Echo-only memory retrieval` blocks OpenClaw `memory_search` and `memory_get` at runtime after Echo cloud access is verified
+- `tools.deny` in `~/.openclaw/openclaw.json` is the stronger and recommended setup when the user wants EchoMemory to fully own memory retrieval
+- after adding `tools.deny`, the user should restart `openclaw gateway`
+
 ### Valid first config
 
 Use this as the baseline cloud-mode setup for a new install:
@@ -262,6 +279,7 @@ Use cloud mode when the user wants sync and retrieval from EchoMemory cloud:
 - `localOnlyMode: false`
 - `apiKey: "ec_..."`
 - key scopes should include `ingest:write` and `memory:read`
+- if they also want EchoMemory to be the only memory retrieval path, recommend `tools.deny: ["memory_search", "memory_get"]` in `~/.openclaw/openclaw.json`
 
 Use local mode when the user only wants localhost browsing of markdown files:
 
@@ -308,6 +326,8 @@ Use `echo_memory_onboard` or `/echo-memory onboard` when the user asks about:
 - signup, OTP, referral code, API key creation
 - configuration, troubleshooting, or how the plugin works
 - the command list itself
+- how to fully replace OpenClaw `memory_search` / `memory_get`
+- what the local UI `Echo-only memory retrieval` checkbox really changes
 
 Use `echo_memory_local_ui` or `/echo-memory view` when the user asks to:
 
@@ -321,6 +341,8 @@ Use `echo_memory_search` or `/echo-memory search <query>` when the user asks:
 - "search my memories for ..."
 - "find my notes about ..."
 - for prior facts, plans, dates, preferences, or decisions already stored in EchoMemory cloud
+
+If the user says they enabled the local UI `Echo-only memory retrieval` option but OpenClaw still reaches for core memory tools, explicitly tell them to add `tools.deny: ["memory_search", "memory_get"]` to `~/.openclaw/openclaw.json` and restart the gateway.
 
 If the user expects a local file to appear in cloud search, verify that the file is actually inside the sync directory and not only visible through the wider local UI workspace scan.
 
@@ -357,10 +379,11 @@ Use `/echo-memory help` when the user explicitly asks for the command list.
 
 1. Install or link the plugin.
 2. Set `tools.profile` to `"full"`.
-3. Set plugin config or `~/.openclaw/.env`.
-4. Restart `openclaw gateway`.
-5. Verify the localhost viewer URL appears in gateway logs.
-6. For cloud mode, run:
+3. If the user wants EchoMemory to fully replace OpenClaw memory recall, also set `tools.deny` for `memory_search` and `memory_get`.
+4. Set plugin config or `~/.openclaw/.env`.
+5. Restart `openclaw gateway`.
+6. Verify the localhost viewer URL appears in gateway logs.
+7. For cloud mode, run:
 
 ```text
 /echo-memory whoami
@@ -407,6 +430,32 @@ Local mode:
           "memoryDir": "C:\\Users\\your-user\\.openclaw\\workspace\\memory",
           "localUiAutoOpenOnGatewayStart": true,
           "localUiAutoInstall": true
+        }
+      }
+    }
+  }
+}
+```
+
+Cloud mode with OpenClaw core memory tools disabled:
+
+```json5
+{
+  "tools": {
+    "profile": "full",
+    "deny": ["memory_search", "memory_get"]
+  },
+  "plugins": {
+    "entries": {
+      "echo-memory-cloud-openclaw-plugin": {
+        "enabled": true,
+        "config": {
+          "apiKey": "ec_your_key_here",
+          "localOnlyMode": false,
+          "memoryDir": "C:\\Users\\your-user\\.openclaw\\workspace\\memory",
+          "localUiAutoOpenOnGatewayStart": true,
+          "localUiAutoInstall": true,
+          "disableOpenClawMemoryToolsWhenConnected": true
         }
       }
     }
