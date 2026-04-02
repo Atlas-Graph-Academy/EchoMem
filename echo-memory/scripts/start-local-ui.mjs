@@ -88,6 +88,7 @@ async function manifestHasPluginId(candidateRoot, pluginId) {
 
 async function resolvePluginRoot({ openclawHome, pluginRootArg }) {
   const pluginId = "echo-memory-cloud-openclaw-plugin";
+  const packageNames = ["openclaw-memory", "echo-memory-cloud-openclaw-plugin"];
   const candidates = [];
 
   function pushCandidate(candidatePath) {
@@ -101,7 +102,9 @@ async function resolvePluginRoot({ openclawHome, pluginRootArg }) {
   pushCandidate(pluginRootArg);
   pushCandidate(process.env.ECHOMEM_PLUGIN_ROOT?.trim());
   pushCandidate(path.join(openclawHome, "extensions", pluginId));
-  pushCandidate(path.join(openclawHome, "node_modules", "@echomem", pluginId));
+  for (const packageName of packageNames) {
+    pushCandidate(path.join(openclawHome, "node_modules", "@echomem", packageName));
+  }
 
   try {
     const entries = await readdir(path.join(openclawHome, "extensions"), { withFileTypes: true });

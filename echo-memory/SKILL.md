@@ -57,7 +57,7 @@ Use this flow when the user has not installed the plugin yet.
 Official references:
 
 - OpenClaw Marketplace: `https://openclawdir.com/plugins/echomemory-ArQh3g`
-- NPM package: `https://www.npmjs.com/package/@echomem/echo-memory-cloud-openclaw-plugin`
+- NPM package: `https://www.npmjs.com/package/@echomem/openclaw-memory`
 - GitHub repo: `https://github.com/Atlas-Graph-Academy/EchoMemory-Cloud-OpenClaw-Plugin`
 
 OpenClaw version note:
@@ -65,6 +65,7 @@ OpenClaw version note:
 - on `2026.3.22+`, native `openclaw skills install` exists for skills, but plugin source precedence also changed
 - this skill should guide plugin installs through exact local paths, `--link`, or the exact scoped npm package
 - do not recommend bare `openclaw plugins install <name>` for EchoMemory because newer OpenClaw versions may resolve bare names through ClawHub first
+- the published npm package is now `@echomem/openclaw-memory`, but the runtime plugin id for config and uninstall remains `echo-memory-cloud-openclaw-plugin`
 
 Recommended setup order:
 
@@ -82,7 +83,7 @@ Published package install inside the OpenClaw home directory:
 
 ```powershell
 cd $HOME\.openclaw
-npm install @echomem/echo-memory-cloud-openclaw-plugin
+npm install @echomem/openclaw-memory
 ```
 
 Local repo install:
