@@ -14,10 +14,19 @@ Prefer the plugin's current runtime behavior over old repo habits:
 - the plugin starts the local UI during `openclaw gateway` startup
 - `localUiAutoOpenOnGatewayStart` defaults to `true`
 - if a local UI page is already open, gateway restart should let that page reconnect and refresh instead of spawning a redundant new browser window
-- browser auto-open is skipped automatically on headless, SSH, or CI sessions
+- packaged installs can expose a `Plugin updates` section in the local UI sidebar for version checks, release links, update actions, and gateway restart
+- the `Plugin updates` section now appears at the bottom of the setup sidebar, below `Configuration`
+- the top bar shows the plugin version badge beside `OpenClaw Smart Clusters`
 - removing the API key from the local UI forces local-only mode for future loads
 - local sync state is now kept in a stable OpenClaw-home state path so reinstalling or upgrading the plugin should not reset prior synced-file status
 - sensitive files in the local UI are warning-labeled but still readable locally; the warning is for caution, not a localhost read blocker
+
+Important install-source distinction:
+
+- packaged installs are the intended target for in-app updates
+- linked repos and local checkouts are development installs and should still be updated through local dev workflows
+- do not assume the active plugin copy lives under `~/.openclaw/node_modules`; on newer OpenClaw versions the active runtime may come from `~/.openclaw/extensions`
+- if the local UI looks newer than the backend behavior, check for multiple plugin copies or multiple gateway processes before assuming the repo code is active
 
 ## OpenClaw memory layout
 
@@ -242,6 +251,12 @@ Successful startup usually includes:
 - local UI dependency install/build messages on first run if assets are missing
 - `[echo-memory] Local workspace viewer: http://127.0.0.1:17823`
 
+Successful local UI verification now also includes:
+
+- the setup sidebar showing `Plugin updates` at the bottom
+- the top bar showing the current plugin version
+- packaged installs showing install-source and latest-version data inside `Plugin updates`
+
 Recommended first smoke test order:
 
 1. `/echo-memory whoami`
@@ -313,6 +328,8 @@ Explain the surface clearly when needed:
 - it can show more workspace files than the cloud sync importer uploads
 - cloud mode status in the UI depends on both config and a working API client, not just the presence of a saved key string
 - local UI warnings for sensitive files do not mean the file is unreadable locally; they are caution labels while the underlying localhost viewer still reads the markdown content from disk
+- the setup sidebar includes a `Plugin updates` panel for packaged installs; it is not the primary update path for linked local repos
+- if the update panel shows `Unknown`, `Unavailable`, or route `404` errors, verify that the running gateway is using the same plugin copy as the visible frontend
 
 ## Normal usage routing
 

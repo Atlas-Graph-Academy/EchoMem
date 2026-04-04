@@ -254,12 +254,28 @@ Expected signs of a healthy startup:
 - the plugin loads without `plugin not found`
 - the local UI may install/build assets on first run
 - the gateway log shows `[echo-memory] Local workspace viewer: http://127.0.0.1:17823`
+- the local UI top bar shows the plugin version badge
+- the setup rail shows `Plugin updates` at the bottom of the sidebar
 
 Transient restart pitfall:
 
 - right after enabling or patching the plugin config, OpenClaw can briefly reject new work with messages like `Gateway is draining for restart; new tasks are not accepted`
 - that is usually a restart timing issue, not proof that the plugin is broken
 - wait for the gateway to finish restarting, then retry
+
+## In-app plugin updates
+
+Current local UI behavior for packaged installs:
+
+- the setup sidebar includes a `Plugin updates` section below `Configuration`
+- it can show current version, latest version, install source, and a release page link
+- it can trigger packaged-plugin updates and gateway restart from the UI
+
+Important distinction:
+
+- packaged installs are the intended target for the in-app update flow
+- linked local repos and local checkouts should still be updated through local development workflows
+- if the local UI and backend behavior do not match, check whether OpenClaw is loading the active plugin from `~/.openclaw/extensions` instead of `~/.openclaw/node_modules`
 
 ## First checks
 
