@@ -1,6 +1,6 @@
 ---
 name: echo-memory
-description: "Guide users through installing, configuring, using, and troubleshooting the EchoMemory Cloud OpenClaw Plugin. Use for plugin setup, API key onboarding, local mode vs cloud mode switching, local UI startup, gateway restart checks, localhost viewer issues, normal /echo-memory command usage, and natural-language routing to current EchoMemory plugin functions."
+description: "Guide users through installing, configuring, using, and troubleshooting the EchoMemory Cloud OpenClaw Plugin. Use for plugin setup, local email OTP onboarding, manual API key fallback, local mode vs cloud mode switching, local UI startup, gateway restart checks, localhost viewer issues, normal /echo-memory command usage, and natural-language routing to current EchoMemory plugin functions."
 ---
 
 # EchoMemory Plugin
@@ -80,7 +80,7 @@ Recommended setup order:
 
 1. Confirm the user already has OpenClaw installed and can run `openclaw`.
 2. Install the plugin from a published source or local repo.
-3. Create an EchoMemory account and API key.
+3. Connect Echo Cloud from the local UI with email and OTP, or use the manual API key fallback.
 4. Add the plugin config and set `tools.profile` to `"full"`.
 5. Restart the gateway.
 6. Verify the local UI and command surface.
@@ -138,21 +138,32 @@ After uninstall:
 
 Do not tell users that reinstalling the plugin should reset synced-file history. Current behavior is supposed to preserve sync state across versions under the OpenClaw home state directory.
 
-### Account and API key
+### Account connection
 
-For first-time users:
+Preferred path for first-time and returning users:
 
-1. Sign up at `https://iditor.com/signup/openclaw`.
-2. Complete the 6-digit OTP email flow.
-3. If prompted on first login, use referral code:
+1. Open the plugin local UI and expand the `Setup` sidebar.
+2. Under `Quick connect`, enter the user's email and click `Connect with email`.
+3. Enter the 6-digit OTP sent by EchoMemory / Supabase.
+4. The plugin and backend handle the rest:
+   - existing users are verified
+   - brand-new users are created through the OpenClaw path
+   - the OpenClaw onboarding shortcut is applied server-side
+   - a new scoped `ec_...` API key is generated automatically
+   - the key is written to `~/.openclaw/.env`
+   - the UI refreshes into connected mode
 
-```text
-openclawyay
-```
+Generated key scope expectation:
 
-4. Open `https://www.iditor.com/api`.
-5. Create an API key that starts with `ec_`.
-6. Recommended scopes: `ingest:write` and `memory:read`.
+- `memory:read`
+- `memory:write`
+- `ingest:write`
+
+Manual fallback:
+
+1. Expand `Advanced: enter API key manually` in the local UI Setup sidebar.
+2. Paste an existing `ec_...` key and save local settings.
+3. If the user needs to manage website keys directly, use `https://www.iditor.com/api` after login.
 
 ### Required host setup
 
@@ -236,6 +247,10 @@ ECHOMEM_SYNC_INTERVAL_MINUTES=15
 ECHOMEM_BATCH_SIZE=10
 ECHOMEM_REQUEST_TIMEOUT_MS=300000
 ```
+
+Important note:
+
+- with the current one-click flow, users do not need to hand-edit `ECHOMEM_API_KEY`; the plugin can write it automatically after email verification
 
 ### First restart and verification
 
@@ -341,7 +356,7 @@ Use `echo_memory_onboard` or `/echo-memory onboard` when the user asks about:
 - marketplace, npm, or GitHub sources
 - first-time setup from zero
 - uninstall, cleanup, or clean reinstall steps
-- signup, OTP, referral code, API key creation
+- signup, email OTP connection, local account creation, manual API key fallback
 - configuration, troubleshooting, or how the plugin works
 - the command list itself
 - how to fully replace OpenClaw `memory_search` / `memory_get`

@@ -180,16 +180,24 @@ Important practical rule:
 
 ## Account setup
 
-1. Sign up at `https://iditor.com/signup/openclaw`.
-2. Complete the email OTP flow.
-3. If first login asks for it, use referral code:
+Preferred path inside the local UI:
 
-```text
-openclawyay
-```
+1. Open the plugin local UI Setup sidebar.
+2. In `Quick connect`, enter the user's email and click `Connect with email`.
+3. Enter the 6-digit OTP from the inbox.
+4. The backend verifies or creates the EchoMemory account, applies the OpenClaw onboarding shortcut automatically, creates a scoped `ec_...` API key, writes it to `~/.openclaw/.env`, and refreshes the UI into connected mode.
 
-4. Create an API key at `https://www.iditor.com/api`.
-5. Use scopes `ingest:write` and `memory:read`.
+Generated key scope expectation:
+
+- `memory:read`
+- `memory:write`
+- `ingest:write`
+
+Manual fallback:
+
+1. Expand `Advanced: enter API key manually` in the Setup sidebar.
+2. Paste an existing `ec_...` key and save.
+3. If the user needs to manage keys directly on the website, use `https://www.iditor.com/api` after login.
 
 ## Required OpenClaw host config
 
@@ -232,6 +240,11 @@ If an old key is already present, remove it instead of keeping both.
   }
 }
 ```
+
+Practical note:
+
+- with the one-click email connect flow, the plugin can populate `apiKey` indirectly by writing `ECHOMEM_API_KEY` into `~/.openclaw/.env`
+- manual JSON config is still valid, but it is no longer the default onboarding path
 
 For most users, the right starting value is:
 

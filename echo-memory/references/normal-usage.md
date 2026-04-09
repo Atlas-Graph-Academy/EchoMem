@@ -16,7 +16,7 @@ Use this reference for everyday EchoMemory requests after setup is already worki
 
 ## Natural-language routing
 
-Use onboarding when the user asks how to install, configure, authenticate, sign up, get an API key, or troubleshoot the plugin.
+Use onboarding when the user asks how to install, configure, authenticate, connect with email, sign up, use the manual API key fallback, or troubleshoot the plugin.
 
 Use the local UI when the user asks to:
 
