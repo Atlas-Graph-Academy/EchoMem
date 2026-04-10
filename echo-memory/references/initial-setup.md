@@ -199,6 +199,12 @@ Manual fallback:
 2. Paste an existing `ec_...` key and save.
 3. If the user needs to manage keys directly on the website, use `https://www.iditor.com/api` after login.
 
+Local disconnect:
+
+1. Use `Disconnect this device` in the Setup sidebar when the user wants to remove the saved local Echo key.
+2. This switches the plugin back to local-only mode on the current machine.
+3. It does not revoke server-side API keys.
+
 ## Required OpenClaw host config
 
 Set `tools.profile` to `"full"` in `~/.openclaw/openclaw.json`.
@@ -289,6 +295,9 @@ Important distinction:
 - packaged installs are the intended target for the in-app update flow
 - linked local repos and local checkouts should still be updated through local development workflows
 - if the local UI and backend behavior do not match, check whether OpenClaw is loading the active plugin from `~/.openclaw/extensions` instead of `~/.openclaw/node_modules`
+- on OpenClaw `2026.4.8`, keep `plugins.allow` configured for trusted plugin ids
+- do not add `plugins.dangerousAllow` to `~/.openclaw/openclaw.json`; that key is invalid on `2026.4.8`
+- dangerous-pattern plugin installs and updates may require `openclaw plugins install --dangerously-force-unsafe-install @echomem/openclaw-memory`
 
 ## First checks
 

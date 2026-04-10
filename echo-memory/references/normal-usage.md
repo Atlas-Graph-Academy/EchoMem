@@ -16,7 +16,7 @@ Use this reference for everyday EchoMemory requests after setup is already worki
 
 ## Natural-language routing
 
-Use onboarding when the user asks how to install, configure, authenticate, connect with email, sign up, use the manual API key fallback, or troubleshoot the plugin.
+Use onboarding when the user asks how to install, configure, authenticate, connect with email, sign up, use the manual API key fallback, disconnect this device, or troubleshoot the plugin.
 
 Use the local UI when the user asks to:
 
@@ -85,3 +85,5 @@ When users ask about the new `Plugin updates` section:
 - treat packaged installs as the intended update target
 - treat linked repos and local checkouts as development installs
 - if the update panel shows route `404` errors or mismatched version behavior, verify which active plugin copy OpenClaw is actually loading
+- on OpenClaw `2026.4.8`, `plugins.allow` is valid but `plugins.dangerousAllow` is not
+- dangerous-pattern installs may require `--dangerously-force-unsafe-install`

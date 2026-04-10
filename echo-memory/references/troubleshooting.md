@@ -85,6 +85,29 @@ Interpretation:
 - if the update panel renders but `plugin-update-status` returns `404`, the visible frontend is newer than the active backend
 - if the install source is wrong, the gateway is likely serving a different plugin copy than the one the user expects
 
+## Plugin update fails on OpenClaw `2026.4.8`
+
+Likely causes:
+
+- `~/.openclaw/openclaw.json` still contains `plugins.dangerousAllow`, which is not a valid key on `2026.4.8`
+- the plugin contains dangerous code patterns such as `child_process`, so OpenClaw blocks install/update unless the unsafe-install override is used
+
+Checks:
+
+1. remove `plugins.dangerousAllow` from `~/.openclaw/openclaw.json` if present
+2. keep `plugins.allow` configured with trusted plugin ids such as `echo-memory-cloud-openclaw-plugin`
+3. retry the install or update with:
+
+```powershell
+openclaw plugins install --dangerously-force-unsafe-install @echomem/openclaw-memory
+```
+
+Interpretation:
+
+- `plugins.allow` is a trust list and is valid
+- `plugins.dangerousAllow` is not a supported plugin config key on `2026.4.8`
+- the unsafe-install override is a CLI flag, not a persistent plugin config field
+
 ## Local UI does not open on gateway restart
 
 Expected behavior:
@@ -137,6 +160,19 @@ Manual server pitfall:
 - the local UI can still show local mode if the fallback server was started without both:
   - a config with `localOnlyMode: false`
   - an initialized API client
+
+## User wants to log out of Echo Cloud in the local UI
+
+Preferred fix:
+
+1. Use `Disconnect this device` in the Setup sidebar.
+2. This clears the saved local API key and switches the plugin back to local-only mode.
+3. Restart the gateway only if the UI or command surface does not pick up the mode change automatically.
+
+Important distinction:
+
+- this is a local-device disconnect only
+- server-side Echo API keys remain valid until removed from `https://www.iditor.com/api`
 
 ## `/echo-memory` commands fail with authorization errors
 

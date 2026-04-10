@@ -17,7 +17,7 @@ Prefer the plugin's current runtime behavior over old repo habits:
 - packaged installs can expose a `Plugin updates` section in the local UI sidebar for version checks, release links, update actions, and gateway restart
 - the `Plugin updates` section now appears at the bottom of the setup sidebar, below `Configuration`
 - the top bar shows the plugin version badge beside `OpenClaw Smart Clusters`
-- removing the API key from the local UI forces local-only mode for future loads
+- the local UI now exposes `Disconnect this device`, which clears the saved local API key and returns the plugin to local-only mode for future loads
 - local sync state is now kept in a stable OpenClaw-home state path so reinstalling or upgrading the plugin should not reset prior synced-file status
 - sensitive files in the local UI are warning-labeled but still readable locally; the warning is for caution, not a localhost read blocker
 
@@ -27,6 +27,8 @@ Important install-source distinction:
 - linked repos and local checkouts are development installs and should still be updated through local dev workflows
 - do not assume the active plugin copy lives under `~/.openclaw/node_modules`; on newer OpenClaw versions the active runtime may come from `~/.openclaw/extensions`
 - if the local UI looks newer than the backend behavior, check for multiple plugin copies or multiple gateway processes before assuming the repo code is active
+- on OpenClaw `2026.4.8`, `plugins.allow` is valid and recommended for explicit trust, but `plugins.dangerousAllow` is not a valid config key
+- dangerous-pattern plugin installs and updates on OpenClaw `2026.4.8` may require `openclaw plugins install --dangerously-force-unsafe-install ...`
 
 ## OpenClaw memory layout
 
@@ -165,6 +167,12 @@ Manual fallback:
 2. Paste an existing `ec_...` key and save local settings.
 3. If the user needs to manage website keys directly, use `https://www.iditor.com/api` after login.
 
+Local disconnect:
+
+1. Use `Disconnect this device` in the local UI Setup sidebar when the user wants to log out of Echo Cloud on the current machine.
+2. This clears the saved local API key and switches the plugin back to local-only mode.
+3. It does not delete server-side Echo API keys; those still need website-side removal if the user wants full revocation.
+
 ### Required host setup
 
 In `~/.openclaw/openclaw.json`, set:
@@ -271,6 +279,7 @@ Successful local UI verification now also includes:
 - the setup sidebar showing `Plugin updates` at the bottom
 - the top bar showing the current plugin version
 - packaged installs showing install-source and latest-version data inside `Plugin updates`
+- when connected, the setup sidebar exposing `Disconnect this device`
 
 Recommended first smoke test order:
 
@@ -345,6 +354,7 @@ Explain the surface clearly when needed:
 - local UI warnings for sensitive files do not mean the file is unreadable locally; they are caution labels while the underlying localhost viewer still reads the markdown content from disk
 - the setup sidebar includes a `Plugin updates` panel for packaged installs; it is not the primary update path for linked local repos
 - if the update panel shows `Unknown`, `Unavailable`, or route `404` errors, verify that the running gateway is using the same plugin copy as the visible frontend
+- the setup sidebar also exposes `Disconnect this device`, which is the local logout path back to local-only mode
 
 ## Normal usage routing
 
@@ -357,6 +367,7 @@ Use `echo_memory_onboard` or `/echo-memory onboard` when the user asks about:
 - first-time setup from zero
 - uninstall, cleanup, or clean reinstall steps
 - signup, email OTP connection, local account creation, manual API key fallback
+- disconnecting this device, local logout, or returning to local-only mode
 - configuration, troubleshooting, or how the plugin works
 - the command list itself
 - how to fully replace OpenClaw `memory_search` / `memory_get`
